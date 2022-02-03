@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const config = require('config')
-const db = config.get('mongoURI')
+const mongoose = require('mongoose');
+const config = require('config');
+const db = config.get('mongoURI');
 
 // ? new standard now is sync await, use when it is synchronous
 // not this mongoose.connect(db)
@@ -11,13 +11,14 @@ const connectDB = async () => {
     // await mongoose.connect(db) or under method are both correct
     await mongoose.connect(db, {
       useNewUrlParser: true,
-    })
-    console.log('MongoDB Connected...')
+      useCreateIndex: true,
+    });
+    console.log('MongoDB Connected...');
   } catch (error) {
-    console.error(error.message)
-    process.exit(1)
+    console.error(error.message);
+    process.exit(1);
     // ? exit process with failure (1), success(0)
   }
-}
+};
 
-module.exports = connectDB
+module.exports = connectDB;
