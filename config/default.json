@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://chanvi123:k9S38ICmoetdsRnU@devconnect.chtki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://chanvi123:k9S38ICmoetdsRnU@devconnect.chtki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret":"mysecrettoken"
 }
