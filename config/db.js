@@ -11,7 +11,7 @@ const connectDB = async () => {
     // await mongoose.connect(db) or under method are both correct
     await mongoose.connect(db, {
       useNewUrlParser: true,
-      useCreateIndex: true,
+      // * useCreateIndex: true, is deprecated
     });
     console.log('MongoDB Connected...');
   } catch (error) {

@@ -4,7 +4,7 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
@@ -26,7 +26,7 @@ router.post(
       'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
   ],
-  (req, res) => {
+  async (req, res) => {
     // ? Inorder to  make this req.body) work
     // ? we have init middleware in body parser
     const errors = validationResult(req);
@@ -67,6 +67,10 @@ router.post(
       await user.save();
 
       // Return jsonwebtoken
+      // ? The reason jwt is secure that it is will expired in a duration -> so hacked can only use it until expired
+      // ? Header - Phần header sẽ chứa kiểu dữ liệu , và thuật toán sử dụng để mã hóa ra chuỗi JWT
+      // ? Payload - Phần payload sẽ chứa các thông tin mình muốn đặt trong chuỗi
+      // ? Signature - phần chử ký này sẽ được tạo ra bằng cách mã hóa phần header , payload kèm theo một chuỗi secret
       const payload = {
         user: {
           id: user.id,
@@ -75,13 +79,14 @@ router.post(
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: 360000 },
+        // ! expiresIn is temporary set to 1 hour, renember to set back to 3600000
+        { expiresIn: 36000000 },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
         }
       );
-      res.send('User register');
+      // res.send('User register');
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
