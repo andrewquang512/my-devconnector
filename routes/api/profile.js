@@ -54,7 +54,6 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log('i am here');
     const {
       company,
       website,
@@ -69,7 +68,6 @@ router.post(
       instagram,
       linkedin,
     } = req.body;
-    console.log('i am here1');
     // Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
@@ -92,11 +90,10 @@ router.post(
     if (facebook) profileFields.social.facebook = facebook;
     if (linkedin) profileFields.social.linkedin = linkedin;
     if (instagram) profileFields.social.instagram = instagram;
-    console.log('i am here2');
     try {
       console.log(req.user.id);
       let profile = await Profile.findOne({ user: req.user.id });
-      //  ? Practice: if we dont have await
+      //  ! Practice: if we dont have await in db action -> return null and it wont run
       console.log(profile);
       if (profile) {
         // Update
@@ -108,12 +105,10 @@ router.post(
           // ? and return the new document after update: true
           // ?(default is false which return the document before update)
         );
-        console.log('i am here3');
         return res.json(profile);
       }
       // Create
       profile = new Profile(profileFields);
-      console.log('i am here4');
       await profile.save();
       res.json(profile);
     } catch (error) {
@@ -122,4 +117,60 @@ router.post(
     }
   }
 );
+
+//@route GET api/profile
+//@desc Get all profiles
+//@access Public
+
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.json(profiles);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+//@route GET api/profile/user/:user_id
+//@desc Get profile by user id
+//@access Public
+
+router.get('/user/:user_id', async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.user_id,
+    }).populate('user', ['name', 'avatar']);
+
+    if (!profile) return res.status(400).json({ msg: 'Profile not found' });
+
+    res.json(profile);
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind == 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+//@route DELETE api/profile
+//@desc Delete profile, user & posts
+//@access Public
+
+router.delete('/', auth, async (req, res) => {
+  try {
+    //  @todo - remove users posts
+    //  Remove profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+    //  Remove user
+    await User.findOneAndRemove({ _id: req.user.id });
+    // ? dont mistake findByIdAndDelete()-use value of _id as param
+    // ? and findOneAndRemove() - use object as param
+    res.json({ msg: 'User deleted' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
 module.exports = router;
