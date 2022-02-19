@@ -23,6 +23,6 @@ module.exports = function (req, res, next) {
     //  ? we would use router.get('/', auth, async (req, res) =>{Hello World}
     // ? which mean we go here auth.js first then next() to get to Hello World
   } catch (error) {
-    res.result(401).json({ msg: 'Token is not valid' });
+    res.status(401).json({ msg: 'Token is not valid' });
   }
 };
