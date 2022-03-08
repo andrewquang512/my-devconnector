@@ -1,11 +1,11 @@
 import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
 
-const Register = ({ setAlert, register }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   // ? instead of using {setAlert}, we can use props then props.setAlert
   const [formData, setformData] = useState({
     name: '',
@@ -53,6 +53,12 @@ const Register = ({ setAlert, register }) => {
       register({ name, email, password });
     }
   };
+
+  // Navigate if logged in
+  if (isAuthenticated) {
+    return <Navigate to='/dashboard' />;
+  }
+
   return (
     <Fragment>
       <h1 className='large text-primary'>Sign Up</h1>
@@ -117,8 +123,11 @@ const Register = ({ setAlert, register }) => {
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 };
-
-export default connect(null, { setAlert, register })(Register);
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+export default connect(mapStateToProps, { setAlert, register })(Register);
 // ? to access, we have to use props.setAlert
 // ? connect(null, { setAlert }) with call setAlert(), we will call action setAlert()
