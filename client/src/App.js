@@ -5,6 +5,8 @@ import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Alert from './components/layout/Alert';
+import Dashboard from './components/dashboard/Dashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
 import './App.css';
 // Redux
 import { Provider } from 'react-redux';
@@ -38,7 +40,7 @@ const App = () => {
                   <Register />
                 </section>
               }
-            ></Route>
+            />
             <Route
               path='/login'
               element={
@@ -47,7 +49,28 @@ const App = () => {
                   <Login />
                 </section>
               }
-            ></Route>
+            />
+            {/* //? React router v5 PrivateRoute syntax */}
+            {/* <PrivateRoute
+              path='/dashboard'
+              element={
+                <section className='container'>
+                  <Alert />
+                  <Dashboard />
+                </section>
+              }
+            /> */}
+            <Route
+              path='/dashboard'
+              element={
+                <PrivateRoute>
+                  <section className='container'>
+                    <Alert />
+                    <Dashboard />
+                  </section>
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </Fragment>
       </Router>

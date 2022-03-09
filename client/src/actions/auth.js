@@ -52,6 +52,8 @@ export const register =
         type: REGISTER_SUCCESS,
         payload: res.data,
       });
+      // ? when REGISTER_SUCCESS, we need to call loadUser action
+      // ? to load user into user field in state
       dispatch(loadUser());
     } catch (error) {
       const errors = error.response.data.errors;
@@ -85,6 +87,8 @@ export const login = (email, password) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
+    // ? when LOGIN_SUCCESS, we need to call loadUser action
+    // ? to load user into user field in state
     dispatch(loadUser());
   } catch (error) {
     const errors = error.response.data.errors;
