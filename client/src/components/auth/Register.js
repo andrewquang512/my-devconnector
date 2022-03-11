@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
+// ? Redirect is deprecated
 import { Link, Navigate } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';

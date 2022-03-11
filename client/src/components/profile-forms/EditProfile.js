@@ -1,10 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createProfile } from '../../actions/profile';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
-const CreateProfile = ({ createProfile }) => {
+const EditProfile = ({
+  profile: { profile, loading },
+  createProfile,
+  getCurrentProfile,
+}) => {
   const [formData, setFormdata] = useState({
     company: '',
     website: '',
@@ -21,6 +25,28 @@ const CreateProfile = ({ createProfile }) => {
   });
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+  useEffect(() => {
+    getCurrentProfile();
+
+    // ? we gonna update form data
+    setFormdata({
+      company: loading || !profile.company ? '' : profile.company,
+      website: loading || !profile.website ? '' : profile.website,
+      location: loading || !profile.location ? '' : profile.location,
+      status: loading || !profile.status ? '' : profile.status,
+      skills: loading || !profile.skills ? '' : profile.skills.join(','),
+      githubusername:
+        loading || !profile.githubusername ? '' : profile.githubusername,
+      bio: loading || !profile.bio ? '' : profile.bio,
+      twitter: loading || !profile.social ? '' : profile.social.twitter,
+      facebook: loading || !profile.social ? '' : profile.social.facebook,
+      linkedin: loading || !profile.social ? '' : profile.social.linkedin,
+      youtube: loading || !profile.social ? '' : profile.social.youtube,
+      instagram: loading || !profile.social ? '' : profile.social.instagram,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   const {
     company,
@@ -45,7 +71,7 @@ const CreateProfile = ({ createProfile }) => {
   let navigate = useNavigate();
   const onSubmit = async (e) => {
     e.preventDefault();
-    createProfile(formData, navigate);
+    createProfile(formData, navigate, true);
   };
 
   return (
@@ -221,20 +247,18 @@ const CreateProfile = ({ createProfile }) => {
   );
 };
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
-// ! withRouter is deprecated in react router dom v6
-// ? below is the self declarement of withRouter as it is deprecated
-// export const withRouter = (Component) => {
-//   const Wrapper = (props) => {
-//     const history = useNavigate();
-//     return <Component history={history} {...props} />;
-//   };
-//   return Wrapper;
-// };
+const mapStateToProps = (state) => ({
+  profile: state.profile,
+});
 
 // ? if we dont wrap in withRouter it not allow us to pass in the history object
 // ! withRouter is deprecated in react router dom v6
-export default connect(null, { createProfile })(CreateProfile);
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
+  EditProfile
+);

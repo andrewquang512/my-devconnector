@@ -96,7 +96,7 @@ router.post(
     try {
       console.log(req.user.id);
       let profile = await Profile.findOne({ user: req.user.id });
-      //  ! Practice: if we dont have await in db action -> return null and it wont run
+      //  ! Practice: if we dont have await in db action -> it will return null and it wont run the code
       console.log(profile);
       if (profile) {
         // Update
