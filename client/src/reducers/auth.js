@@ -33,8 +33,6 @@ const authReducer = (state = initialState, action) => {
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
-      console.log('auth.js line 32');
-      console.log(payload);
       return {
         // ? state is immutable so we have to include any other state that's already there
         // ? => using ...state
