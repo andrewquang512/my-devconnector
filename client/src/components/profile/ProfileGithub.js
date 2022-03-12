@@ -10,15 +10,15 @@ const ProfileGithub = ({ username, getGithubRepos, repos }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div class='profile-github'>
-      <h2 class='text-primary my-1'>
-        <i class='fab fa-github'></i> Github Repos
+    <div className='profile-github'>
+      <h2 className='text-primary my-1'>
+        <i className='fab fa-github'></i> Github Repos
       </h2>
       {repos === null ? (
         <Spinner />
       ) : (
-        repos.map((repo) => (
-          <div class='repo bg-white p-1 my-1'>
+        repos.map((repo, index) => (
+          <div key={index} className='repo bg-white p-1 my-1'>
             <div>
               <h4>
                 <a
@@ -33,13 +33,13 @@ const ProfileGithub = ({ username, getGithubRepos, repos }) => {
             </div>
             <div>
               <ul>
-                <li class='badge badge-primary'>
+                <li className='badge badge-primary'>
                   Stars: {repo.stargazers_count}
                 </li>
-                <li class='badge badge-dark'>
+                <li className='badge badge-dark'>
                   Watchers: {repo.watchers_count}
                 </li>
-                <li class='badge badge-light'>Forks: {repo.forks_count}</li>
+                <li className='badge badge-light'>Forks: {repo.forks_count}</li>
               </ul>
             </div>
           </div>
