@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { getPosts } from '../../actions/post';
 import Spinner from '../layout/Spinner';
 import PostItem from './PostItem';
+import PostForm from './PostForm';
 import { Link } from 'react-router-dom';
 
 const Posts = ({ getPosts, post: { posts, loading } }) => {
   useEffect(() => {
     getPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getPosts]);
   return loading ? (
     <Spinner />
   ) : (
@@ -19,7 +19,7 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
       <p className='lead'>
         <i className='fas fa-user'></i>
       </p>
-      {/* PostForm */}
+      <PostForm />
       <div className='posts'>
         {posts.map((post) => (
           <PostItem key={post._id} post={post} />
