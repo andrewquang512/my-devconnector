@@ -18,7 +18,6 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
   let params = useParams();
   useEffect(() => {
     getProfileById(params.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProfileById]);
 
   return (
